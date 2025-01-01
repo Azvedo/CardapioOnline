@@ -1,9 +1,31 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function InfoModal({ isOpen, onClose, order }) {
+function InfoModal({isOpen, onClose, order}) {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [change, setChange] = useState('');
+  const [disabled, setDisabled] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [street, setStreet] = useState('');
+  const [number, setNumber] = useState('');
+  const [neighborhood, setNeighborhood] = useState('');
+
+
+  useEffect(() => {
+    if (order.length === 0){
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [order]);
+
+  const handleSendOrder = () => {
+    const orderSummary = order.map(item => `${item.name} - ${item.count}`).join('\n');
+    const message = `Pedido:\n${orderSummary}\n\nEntrega:\nNome: ${name}\nTelefone: ${phone}\nLogradouro: ${street}\nNúmero: ${number}\nBairro: ${neighborhood}\nForma de Pagamento: ${paymentMethod}${paymentMethod === 'dinheiro' ? `\nTroco para: ${change}` : ''}`;
+    const whatsappLink = `https://wa.me/5581999105140?text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+  };
 
   if (!isOpen) {
     return null;
@@ -11,14 +33,14 @@ function InfoModal({ isOpen, onClose, order }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg w-96">
+      <div className="bg-white p-6 rounded-lg w-96 overflow-y-auto h-[700px]">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Resumo do Pedido</h2>
           <button onClick={onClose} className="text-xl">&times;</button>
         </div>
         <div>
           <h3 className="font-bold">Itens do Pedido:</h3>
-          <ul>
+          <ul className='text-2xs h-24 flex flex-col flex-wrap'>
             {order.map((item, index) => (
               <li key={index}>
                 {item.name} - {item.count}
@@ -29,25 +51,25 @@ function InfoModal({ isOpen, onClose, order }) {
         <div className="mt-4">
           <h3 className="font-bold">Informações de Entrega:</h3>
           <form>
-            <div className="mb-2">
+          <div className="mb-2">
               <label className="block">Nome:</label>
-              <input type="text" className="w-full border p-2" />
+              <input type="text" className="w-full border p-2" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div className="mb-2">
               <label className="block">Telefone:</label>
-              <input type="text" className="w-full border p-2" />
+              <input type="text" className="w-full border p-2" value={phone} onChange={(e) => setPhone(e.target.value)} required />
             </div>
             <div className="mb-2">
               <label className="block">Rua:</label>
-              <input type="text" className="w-full border p-2" />
+              <input type="text" className="w-full border p-2" value={street} onChange={(e) => setStreet(e.target.value)} required/>
             </div>
             <div className="mb-2">
               <label className="block">Número:</label>
-              <input type="text" className="w-full border p-2" />
+              <input type="text" className="w-full border p-2" value={number} onChange={(e) => setNumber(e.target.value)} required/>
             </div>
             <div className="mb-2">
               <label className="block">Bairro:</label>
-              <input type="text" className="w-full border p-2" />
+              <input type="text" className="w-full border p-2" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} required/>
             </div>
             <div className="mb-2">
               <label className="block">Forma de Pagamento:</label>
@@ -55,6 +77,7 @@ function InfoModal({ isOpen, onClose, order }) {
                 className="w-full border p-2"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
+                required
               >
                 <option value="">Selecione</option>
                 <option value="pix">Pix</option>
@@ -70,6 +93,7 @@ function InfoModal({ isOpen, onClose, order }) {
                   className="w-full border p-2"
                   value={change}
                   onChange={(e) => setChange(e.target.value)}
+                  required
                 />
               </div>
             )}
@@ -82,7 +106,7 @@ function InfoModal({ isOpen, onClose, order }) {
           </form>
         </div>
         <div className="mt-4 text-right">
-          <button onClick={onClose} className="px-4 py-2 bg-lime-500 rounded-xl font-medium hover:bg-lime-800">
+          <button onClick={handleSendOrder} disabled={disabled} className="px-4 py-2 bg-lime-500 rounded-xl font-medium hover:bg-lime-800">
             Enviar Pedido
           </button>
         </div>
