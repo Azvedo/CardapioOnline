@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 
-function InfoModal({isOpen, onClose, order}) {
+function InfoModal({ isOpen, onClose, order, total }) {
   const [paymentMethod, setPaymentMethod] = useState('');
   const [change, setChange] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -13,18 +13,28 @@ function InfoModal({isOpen, onClose, order}) {
 
 
   useEffect(() => {
-    if (order.length === 0){
+    if (
+      order.length === 0 || !name || !phone || !street || !number || !neighborhood || !paymentMethod || (paymentMethod === 'dinheiro' && !change)
+    ) {
       setDisabled(true);
     } else {
       setDisabled(false);
     }
-  }, [order]);
+  }, [order, name, phone, street, number, neighborhood, paymentMethod, change]);
 
   const handleSendOrder = () => {
     const orderSummary = order.map(item => `${item.name} - ${item.count}`).join('\n');
-    const message = `Pedido:\n${orderSummary}\n\nEntrega:\nNome: ${name}\nTelefone: ${phone}\nLogradouro: ${street}\nNúmero: ${number}\nBairro: ${neighborhood}\nForma de Pagamento: ${paymentMethod}${paymentMethod === 'dinheiro' ? `\nTroco para: ${change}` : ''}`;
+    const message = `*Pedido*\n${orderSummary}\n\n*Entrega*\n*Nome:* ${name}\n*Telefone:* ${phone}\n*Logradouro:* ${street}\n*Número:* ${number}\n*Bairro:* ${neighborhood}\n \n*Total:* ${total}\n*Forma de Pagamento:* ${paymentMethod}${paymentMethod === 'dinheiro' ? `\n*Troco para:* ${change}` : ''}\n`;
     const whatsappLink = `https://wa.me/5581999105140?text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
+    setPaymentMethod('');
+    setChange('');
+    setName('');
+    setPhone('');
+    setStreet('');
+    setNumber('');
+    setNeighborhood('');
+    onClose();
   };
 
   if (!isOpen) {
@@ -43,33 +53,36 @@ function InfoModal({isOpen, onClose, order}) {
           <ul className='text-2xs h-24 flex flex-col flex-wrap'>
             {order.map((item, index) => (
               <li key={index}>
-                {item.name} - {item.count}
+                {item.name} ---- {item.count}
               </li>
             ))}
           </ul>
+          <h3>
+            Total: {total}
+          </h3>
         </div>
         <div className="mt-4">
           <h3 className="font-bold">Informações de Entrega:</h3>
           <form>
-          <div className="mb-2">
+            <div className="mb-2">
               <label className="block">Nome:</label>
               <input type="text" className="w-full border p-2" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div className="mb-2">
               <label className="block">Telefone:</label>
-              <input type="text" className="w-full border p-2" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+              <input type="tel" className="w-full border p-2" minLength={10} value={phone} onChange={(e) => setPhone(e.target.value)} required />
             </div>
             <div className="mb-2">
               <label className="block">Rua:</label>
-              <input type="text" className="w-full border p-2" value={street} onChange={(e) => setStreet(e.target.value)} required/>
+              <input type="text" className="w-full border p-2" value={street} onChange={(e) => setStreet(e.target.value)} required />
             </div>
             <div className="mb-2">
               <label className="block">Número:</label>
-              <input type="text" className="w-full border p-2" value={number} onChange={(e) => setNumber(e.target.value)} required/>
+              <input type="text" className="w-full border p-2" value={number} onChange={(e) => setNumber(e.target.value)} required />
             </div>
             <div className="mb-2">
               <label className="block">Bairro:</label>
-              <input type="text" className="w-full border p-2" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} required/>
+              <input type="text" className="w-full border p-2" value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} required />
             </div>
             <div className="mb-2">
               <label className="block">Forma de Pagamento:</label>
@@ -98,7 +111,7 @@ function InfoModal({isOpen, onClose, order}) {
               </div>
             )}
             {paymentMethod === 'pix' && (
-                <div className="mb-2">
+              <div className="mb-2">
                 <label className="block">Chave Pix:</label>
                 <input type="text" value={12131231231} readOnly className="w-full border p-2" />
               </div>
