@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { Carnes, Acompanhamentos, Bebidas } from "../utils/data";
 import ItemWithCounter from "../components/ItemWithCounter";
-import InfoModal from '../components/InfoModal';
+import InfoModal from '../components/Modals/InfoModal';
 
 function Order() {
   
