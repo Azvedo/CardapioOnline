@@ -10,7 +10,7 @@ function EditModal({ isOpen, item, close }) {
 
     const updtItem = async () => {
         try {
-            await updateItem(item.id, available, price);
+            await updateItem(item.id, available === "true", parseFloat(price));
             console.log("Item atualizado com sucesso!");
             close();
         } catch (error) {
