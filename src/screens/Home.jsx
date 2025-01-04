@@ -15,16 +15,18 @@ function Home() {
         const unsubscribe = listenToCardapio((updatedMenu) => {
             // Divide os itens por categoria
             const categorizedMenu = {
-                Carnes: updatedMenu.filter((item) => item.type === "Carnes"),
-                Acompanhamentos: updatedMenu.filter((item) => item.type === "Acompanhamentos"),
-                Bebidas: updatedMenu.filter((item) => item.type === "Bebidas"),
+                Carnes: updatedMenu.filter((item) => item.type === "Carnes" && item.available === true),
+                Acompanhamentos: updatedMenu.filter((item) => item.type === "Acompanhamentos" && item.available === true),
+                Bebidas: updatedMenu.filter((item) => item.type === "Bebidas" && item.available === true),
             };
+
             setMenu(categorizedMenu);
         });
-
         // Remove o listener quando o componente for desmontado
         return () => unsubscribe();
-    }, []);
+    },[]);
+
+    console.log(menu);
 
     const handleClick = () => {
         navigate('/pedido');
@@ -38,7 +40,7 @@ function Home() {
             </div>
             <div className="flex p-1 justify-around border-y-2 text-xs">
                 <h2 className="text-[#888888] font-regular ">
-                    <a href="#carnes">Carnes</a>
+                    <a href="#carnes">Almoço</a>
                 </h2>
                 <h2 className="text-[#888888] font-regular">
                     <a href="#acompanhamento">Acompanhamentos</a>
@@ -48,8 +50,8 @@ function Home() {
                 </h2>
             </div>
             <div className="relative">
-                <button className=" absolute top-[26rem] right-4 flex justify-center px-4 py-3 bg-lime-500 rounded-xl font-medium hover:bg-lime-800" onClick={handleClick}>
-                    Monte o seu
+                <button className="absolute top-[26rem] right-4 flex justify-center px-4 py-3 bg-lime-500 rounded-xl font-medium hover:bg-lime-800 sm:top-[-8.7rem] sm:right-8" onClick={handleClick}>
+                    Peça o seu
                 </button>
             </div>
 
@@ -59,7 +61,7 @@ function Home() {
                         className="text-[#424242] font-medium px-8 pt-4 text-[18px]"
                         id="carnes"
                     >
-                        Carnes
+                        Almoço
                     </h2>
                 </div>
                 {menu.Carnes.map((item) => (

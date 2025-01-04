@@ -11,6 +11,8 @@ function Item({ item, AdminPage }) {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
+    const formattedPrice = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price);
+
     const handleEdit = () => {
         setEditModalVisible(!editModalVisible);
     };
@@ -21,7 +23,7 @@ function Item({ item, AdminPage }) {
 
     return (
         <div className="flex flex-row justify-between px-8 items-center border-y-2 py-4 w-full h-16 sm:mt-2">
-            <div className=' w-[150px]'>
+            <div className='flex flex-row gap-4'>
                 <h2 className="text-black font-regular text-[16px]">{item.name}</h2>
             </div>
             <div className="justify-center items-center">
@@ -36,14 +38,7 @@ function Item({ item, AdminPage }) {
                     </div>
                 ) : (
                     <div className="flex flex-row gap-4 p-4 justify-center items-center">
-                        <h2>
-                            {item.available === true ?
-                                (
-                                    <span className="text-green-500">Disponível</span>
-                                ) : (
-                                    <span className="text-red-500">Indisponível</span>
-                                )}
-                        </h2>
+                        <p>{formattedPrice}</p>
                     </div>
                 )}
             </div>
@@ -58,6 +53,7 @@ Item.propTypes = {
         name: PropTypes.string.isRequired,
         id: PropTypes.string,
         available: PropTypes.bool,
+        price: PropTypes.number,
     }).isRequired,
     AdminPage: PropTypes.bool,
 };
