@@ -6,9 +6,9 @@ import Item from "../components/Item";
 import { listenToCardapio } from "../services/firestore";
 
 function Home() {
-
     const navigate = useNavigate();
     const [menu, setMenu] = useState({ Carnes: [], Acompanhamentos: [], Bebidas: [] });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Configura o listener para ouvir alterações no cardápio
@@ -21,12 +21,11 @@ function Home() {
             };
 
             setMenu(categorizedMenu);
+            setLoading(false); // Dados carregados, desativa o estado de carregamento
         });
         // Remove o listener quando o componente for desmontado
         return () => unsubscribe();
-    },[]);
-
-    console.log(menu);
+    }, []);
 
     const handleClick = () => {
         navigate('/pedido');
@@ -55,41 +54,47 @@ function Home() {
                 </button>
             </div>
 
-            <div className="flex flex-col justify-around h-[500px] sm:h-full overflow-y-auto ">
-                <div>
-                    <h2
-                        className="text-[#424242] font-medium px-8 pt-4 text-[18px]"
-                        id="carnes"
-                    >
-                        Almoço
-                    </h2>
+            {loading ? (
+                <div className="flex justify-center items-center h-[500px] sm:h-full">
+                    <p>Carregando...</p>
                 </div>
-                {menu.Carnes.map((item) => (
-                    <Item item={item} key={item.id} />
-                ))}
-                <div>
-                    <h2
-                        className="text-[#424242] font-medium px-8 pt-4 text-[18px]"
-                        id="acompanhamento"
-                    >
-                        Acompanhamentos
-                    </h2>
+            ) : (
+                <div className="flex flex-col justify-around h-[500px] sm:h-full overflow-y-auto ">
+                    <div>
+                        <h2
+                            className="text-[#424242] font-medium px-8 pt-4 text-[18px]"
+                            id="carnes"
+                        >
+                            Almoço
+                        </h2>
+                    </div>
+                    {menu.Carnes.map((item) => (
+                        <Item item={item} key={item.id} />
+                    ))}
+                    <div>
+                        <h2
+                            className="text-[#424242] font-medium px-8 pt-4 text-[18px]"
+                            id="acompanhamento"
+                        >
+                            Acompanhamentos
+                        </h2>
+                    </div>
+                    {menu.Acompanhamentos.map((item) => (
+                        <Item item={item} key={item.id} />
+                    ))}
+                    <div>
+                        <h2
+                            className="text-[#424242] font-medium px-8 pt-4 text-[18px]"
+                            id="bebidas"
+                        >
+                            Bebidas
+                        </h2>
+                    </div>
+                    {menu.Bebidas.map((item) => (
+                        <Item item={item} key={item.id} />
+                    ))}
                 </div>
-                {menu.Acompanhamentos.map((item) => (
-                    <Item item={item} key={item.id} />
-                ))}
-                <div>
-                    <h2
-                        className="text-[#424242] font-medium px-8 pt-4 text-[18px]"
-                        id="bebidas"
-                    >
-                        Bebidas
-                    </h2>
-                </div>
-                {menu.Bebidas.map((item) => (
-                    <Item item={item} key={item.id} />
-                ))}
-            </div>
+            )}
 
             <Footer />
         </div>

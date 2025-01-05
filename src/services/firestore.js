@@ -37,3 +37,29 @@ export async function deleteItem(itemId) {
   const itemRef = doc(db, "menu", itemId);
   await deleteDoc(itemRef);
 }
+
+
+export function listenToOrders(callback) {
+  const menuCollection = collection(db, "pedidos");
+
+  // Adiciona o listener
+  const unsubscribe = onSnapshot(menuCollection, (snapshot) => {
+    const pedidos = snapshot.docs.map((doc) => ({
+      id: doc.id, // ID do documento
+      ...doc.data(), // Dados do documento
+    }));
+
+    // Executa o callback com os dados atualizados
+    callback(pedidos);
+  });
+
+  // Retorna a função para cancelar a inscrição (evita vazamentos de memória)
+  return unsubscribe;
+}
+
+
+// Função para adicionar um novo pedido
+export async function createOrder(item) {
+  const itemRef = await addDoc(collection(db, "pedidos"), item);
+  return itemRef.id;
+}
