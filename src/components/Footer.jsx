@@ -7,7 +7,7 @@ function Footer() {
   return (
     <footer className="bg-brand-primary flex justify-around items-center p-4 h-full">
       <p className=" text-white font-normal "> {by} </p>
-      <button onClick={() => { navigate('/admin')}} className=" text-white text-center text-xs">
+      <button onClick={() => { navigate('/login')}} className=" text-white text-center text-xs">
         Painel
       </button>
     </footer>

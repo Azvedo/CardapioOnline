@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
+import { createOrder } from '../../services/firestore';
 
 function InfoModal({ isOpen, onClose, order, total }) {
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -22,9 +23,33 @@ function InfoModal({ isOpen, onClose, order, total }) {
     }
   }, [order, name, phone, street, number, neighborhood, paymentMethod, change]);
 
-  const handleSendOrder = () => {
+  const handleSendOrder = async() => {
     const orderSummary = order.map(item => `${item.name} - ${item.count}`).join('\n');
     const message = `*Pedido*\n${orderSummary}\n\n*Entrega*\n*Nome:* ${name}\n*Telefone:* ${phone}\n*Logradouro:* ${street}\n*Número:* ${number}\n*Bairro:* ${neighborhood}\n \n*Total:* ${total}\n*Forma de Pagamento:* ${paymentMethod}${paymentMethod === 'dinheiro' ? `\n*Troco para:* ${change}` : ''}\n`;
+    const orderDetails = {
+      order: order.map(item => ({ name: item.name, count: item.count })),
+      delivery: {
+        name,
+        phone,
+        street,
+        number,
+        neighborhood,
+      },
+      payment: {
+        method: paymentMethod,
+        change: paymentMethod === 'dinheiro' ? change : null,
+      },
+      total,
+      data: new Date().toISOString(),
+    };
+
+    try {
+      await createOrder(orderDetails);
+      console.log('Order created successfully');
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
+    
     const whatsappLink = `https://wa.me/5581999105140?text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
     setPaymentMethod('');

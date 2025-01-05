@@ -15,11 +15,12 @@ function Order() {
   const [total, setTotal] = useState(0);
   const [itemTotals, setItemTotals] = useState({});
   const [menu, setMenu] = useState({ Carnes: [], Acompanhamentos: [], Bebidas: [] });
+  const [loading, setLoading] = useState(true); // Estado de carregamento
   const navigate = useNavigate();
   const carneRefs = useRef([]);
   const acompanhamentoRefs = useRef([]);
   const bebidaRefs = useRef([]);
-  
+
   const handleTotalChange = (itemId, newTotal) => {
     setItemTotals((prevTotals) => {
       const updatedTotals = { ...prevTotals, [itemId]: newTotal };
@@ -28,7 +29,7 @@ function Order() {
       return updatedTotals;
     });
   };
-  
+
   useEffect(() => {
     const unsubscribe = listenToCardapio((updatedMenu) => {
       const categorizedMenu = {
@@ -38,6 +39,7 @@ function Order() {
       };
 
       setMenu(categorizedMenu);
+      setLoading(false); // Dados carregados, desativa o estado de carregamento
     });
     // Remove o listener quando o componente for desmontado
     return () => unsubscribe();
@@ -73,66 +75,74 @@ function Order() {
         <div className="w-10" />
       </div>
 
-      <div className="flex flex-col justify-start p-2">
-        <h2 className="text-[#424242] font-medium px-8 pt-4 text-[16px]">
-          Carnes
-        </h2>
-        <p className="text-[#888888] font-regular px-8 pt-1 pb-3 text-[12px]">
-          Selecione a opcão desejada
-        </p>
-        {menu.Carnes.map((item, index) => (
-          <ItemWithCounter
-            item={item}
-            key={index}
-            ref={el => carneRefs.current[index] = el}
-            onTotalChange={(newTotal) => handleTotalChange(item.id, newTotal)}
-          />
-        ))}
-      </div>
-
-      <div className="flex flex-col justify-start p-2">
-        <h2 className="text-[#424242] font-medium px-8 pt-4 text-[16px]">
-          Acompanhamentos
-        </h2>
-        <p className="text-[#888888] font-regular px-8 pt-1 pb-3 text-[12px]">
-          Escolha
-        </p>
-        {menu.Acompanhamentos.map((item, index) => (
-          <ItemWithCounter
-            item={item}
-            key={index}
-            ref={el => acompanhamentoRefs.current[index] = el}
-            onTotalChange={(newTotal) => handleTotalChange(item.id, newTotal)}
-          />
-        ))}
-      </div>
-
-      <div className="flex flex-col justify-center p-2">
-        <h2 className="text-[#424242] font-medium px-8 pt-4 text-[16px]">
-          Bebidas
-        </h2>
-        <p className="text-[#888888] font-regular px-8 pt-1 pb-3 text-[12px]">
-          Escolha
-        </p>
-        {menu.Bebidas.map((item, index) => (
-          <ItemWithCounter
-            item={item}
-            key={index}
-            ref={el => bebidaRefs.current[index] = el}
-            onTotalChange={(newTotal) => handleTotalChange(item.id, newTotal)}
-          />
-        ))}
-      </div>
-
-      <div className="flex justify-between p-4 border-t-2">
-        <div className='ml-8'>
-          <h2 className="text-[#424242] font-medium">Total</h2>
-          <p className="text-[#888888] font-regular">{formattedTotal}</p>
+      {loading ? (
+        <div className="flex justify-center items-center h-full">
+          <p>Carregando...</p>
         </div>
-        <button onClick={createOrder} className="px-4 py-2 bg-lime-500 rounded-xl font-medium hover:bg-lime-800">
-          Confirmar Pedido
-        </button>
-      </div>
+      ) : (
+        <>
+          <div className="flex flex-col justify-start p-2">
+            <h2 className="text-[#424242] font-medium px-8 pt-4 text-[16px]">
+              Carnes
+            </h2>
+            <p className="text-[#888888] font-regular px-8 pt-1 pb-3 text-[12px]">
+              Selecione a opcão desejada
+            </p>
+            {menu.Carnes.map((item, index) => (
+              <ItemWithCounter
+                item={item}
+                key={index}
+                ref={el => carneRefs.current[index] = el}
+                onTotalChange={(newTotal) => handleTotalChange(item.id, newTotal)}
+              />
+            ))}
+          </div>
+
+          <div className="flex flex-col justify-start p-2">
+            <h2 className="text-[#424242] font-medium px-8 pt-4 text-[16px]">
+              Acompanhamentos
+            </h2>
+            <p className="text-[#888888] font-regular px-8 pt-1 pb-3 text-[12px]">
+              Escolha
+            </p>
+            {menu.Acompanhamentos.map((item, index) => (
+              <ItemWithCounter
+                item={item}
+                key={index}
+                ref={el => acompanhamentoRefs.current[index] = el}
+                onTotalChange={(newTotal) => handleTotalChange(item.id, newTotal)}
+              />
+            ))}
+          </div>
+
+          <div className="flex flex-col justify-center p-2">
+            <h2 className="text-[#424242] font-medium px-8 pt-4 text-[16px]">
+              Bebidas
+            </h2>
+            <p className="text-[#888888] font-regular px-8 pt-1 pb-3 text-[12px]">
+              Escolha
+            </p>
+            {menu.Bebidas.map((item, index) => (
+              <ItemWithCounter
+                item={item}
+                key={index}
+                ref={el => bebidaRefs.current[index] = el}
+                onTotalChange={(newTotal) => handleTotalChange(item.id, newTotal)}
+              />
+            ))}
+          </div>
+
+          <div className="flex justify-between p-4 border-t-2">
+            <div className='ml-8'>
+              <h2 className="text-[#424242] font-medium">Total</h2>
+              <p className="text-[#888888] font-regular">{formattedTotal}</p>
+            </div>
+            <button onClick={createOrder} className="px-4 py-2 bg-lime-500 rounded-xl font-medium hover:bg-lime-800">
+              Confirmar Pedido
+            </button>
+          </div>
+        </>
+      )}
       <Footer />
 
       <InfoModal isOpen={isModalOpen} onClose={handleModalVisibility} order={order} total={formattedTotal} />
