@@ -44,9 +44,9 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="h-screen flex flex-col gap-20 sm:gap-32 ">
       <Header />
-      <div>
+      <div className="p-2">
         <form onSubmit={handleLogin} className="p-5 max-w-md mx-auto border border-gray-300 rounded m-8">
           <h2 className="text-2xl font-bold mb-4 text-center">Login do Administrador</h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}

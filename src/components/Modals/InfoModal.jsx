@@ -49,7 +49,7 @@ function InfoModal({ isOpen, onClose, order, total }) {
     } catch (error) {
       console.error('Error creating order:', error);
     }
-    
+    //8199202-7735 numero do restaurante
     const whatsappLink = `https://wa.me/5581999105140?text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
     setPaymentMethod('');

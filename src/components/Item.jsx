@@ -24,7 +24,7 @@ function Item({ item, AdminPage }) {
     return (
         <div className="flex flex-row justify-between px-8 items-center border-y-2 py-4 w-full h-16 sm:mt-2">
             <div className='flex flex-row gap-4'>
-                <h2 className="text-black font-regular text-[16px]">{item.name}</h2>
+                <h2 className="text-black font-regular text-[16px]">{item.name.toUpperCase()}</h2>
             </div>
             <div className="justify-center items-center">
                 {AdminPage ? (

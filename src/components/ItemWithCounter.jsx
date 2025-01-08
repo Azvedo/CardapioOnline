@@ -30,7 +30,7 @@ const ItemWithCounter = forwardRef(({ item, onTotalChange }, ref) => {
 
   return (
     <div className="flex justify-between items-center border-b border-dashed border-gray-300 px-8 py-2">
-      <span className="text-[#424242] font-medium">{item.name}</span>
+      <span className="text-[#424242] font-medium">{item.name.toUpperCase()}</span>
       <div className="flex items-center">
         <span className="text-[#424242] font-medium mr-2">{formattedPrice}</span>
         {item.type === "Carnes" ? (
