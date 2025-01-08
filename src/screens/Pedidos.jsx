@@ -42,11 +42,11 @@ function Pedidos() {
             {location.state && location.state.from === "admin/dashboard" ? (
                 <div>
                     <Header />
-                    <div className="bg-slate-900 p-4 flex justify-between items-center">
-                        <button onClick={handleBack} className="text-[#F9CF49] hover:text-yellow-300">
+                    <div className="bg-[#0b0100] p-4 flex justify-between items-center">
+                        <button onClick={handleBack} className="text-brand-primary hover:text-yellow-300">
                             <FontAwesomeIcon icon={faChevronLeft} className="mr-2" />
                         </button>
-                        <h1 className="text-[#F9CF49] text-2xl text-center w-full font-medium">Pedidos</h1>
+                        <h1 className="text-brand-primary text-2xl text-center w-full font-medium">Pedidos</h1>
                     </div>
                     <div className="p-4">
                         <table className="min-w-full bg-white">

@@ -47,13 +47,13 @@ function Admin() {
             {location.state && (location.state.from === "login" || location.state.from === "admin/pedidos") ? (
                 <div>
                     <Header />
-                    <div className="absolute right-6 top-[38px] flex gap-8 items-center">
-                        <button className="text-[#F9CF49] hover:text-yellow-300" onClick={() => navigate("/admin/pedidos", { state: { from: "admin/dashboard" } })}>
+                    <div className="absolute right-6 top-[44px] flex gap-8 items-center">
+                        <button className="text-[#f48e22] hover:text-brand-primary" onClick={() => navigate("/admin/pedidos", { state: { from: "admin/dashboard" } })}>
                             <h2>
                                 Acessar Pedidos
                             </h2>
                         </button>
-                        <button className="text-[#F9CF49] hover:text-yellow-300" onClick={handleLogout}>
+                        <button className="text-[#f48e22] hover:text-brand-primary" onClick={handleLogout}>
                             <FontAwesomeIcon icon={faSignOutAlt} /> Logout
                         </button>
                     </div>

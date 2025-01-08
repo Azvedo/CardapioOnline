@@ -83,7 +83,7 @@ function Order() {
         <>
           <div className="flex flex-col justify-start p-2">
             <h2 className="text-[#424242] font-medium px-8 pt-4 text-[16px]">
-              Carnes
+              Almoço
             </h2>
             <p className="text-[#888888] font-regular px-8 pt-1 pb-3 text-[12px]">
               Selecione a opcão desejada
